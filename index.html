@@ -540,6 +540,220 @@
       font-size: 12px;
     }
 
+    /* VERIFICATION WORKSPACE */
+
+    .workspace {
+      display: none;
+      min-height: calc(100vh - 76px);
+      padding: 54px 0 80px;
+    }
+
+    .workspace.is-active {
+      display: block;
+    }
+
+    .landing.is-hidden {
+      display: none;
+    }
+
+    .workspace-stage.is-hidden {
+      display: none;
+    }
+
+    body.workspace-active>footer {
+      display: none;
+    }
+
+    .workspace-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+
+    .workspace-top h1 {
+      margin-top: 18px;
+      font-size: clamp(38px, 5vw, 62px);
+    }
+
+    .workspace-top p {
+      max-width: 650px;
+      margin-top: 16px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .workspace-back {
+      border: 1px solid rgba(255, 255, 255, .14);
+      border-radius: 12px;
+      padding: 11px 15px;
+      color: #d9edf5;
+      background: rgba(255, 255, 255, .05);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .workspace-card {
+      max-width: 850px;
+      padding: clamp(22px, 4vw, 38px);
+      border: 1px solid rgba(85, 230, 255, .18);
+      border-radius: 26px;
+      background: rgba(13, 38, 55, .76);
+      box-shadow: 0 30px 90px rgba(0, 0, 0, .2);
+    }
+
+    .workspace-card h2 {
+      font-family: "Space Grotesk";
+      font-size: 28px;
+    }
+
+    .step-label {
+      margin-top: 9px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .upload-zone {
+      display: block;
+      margin-top: 26px;
+      padding: 38px 24px;
+      border: 1px dashed rgba(85, 230, 255, .42);
+      border-radius: 18px;
+      color: #dffaff;
+      background: rgba(85, 230, 255, .055);
+      text-align: center;
+      cursor: pointer;
+      transition: background .2s, border-color .2s;
+    }
+
+    .upload-zone:hover,
+    .upload-zone:focus-within {
+      border-color: var(--cyan);
+      background: rgba(85, 230, 255, .1);
+    }
+
+    .upload-icon {
+      display: block;
+      margin-bottom: 12px;
+      color: var(--cyan);
+      font-size: 28px;
+    }
+
+    .upload-zone strong {
+      display: block;
+      font-family: "Space Grotesk";
+      font-size: 17px;
+    }
+
+    .upload-zone small {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+    }
+
+    .file-input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+    }
+
+    .file-row {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-top: 18px;
+      padding: 15px 17px;
+      border: 1px solid rgba(88, 224, 176, .2);
+      border-radius: 14px;
+      background: rgba(88, 224, 176, .07);
+    }
+
+    .file-row.is-visible {
+      display: flex;
+    }
+
+    .file-meta {
+      min-width: 0;
+    }
+
+    .file-meta strong,
+    .file-meta small {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .file-meta strong {
+      color: #e9fff7;
+    }
+
+    .file-meta small {
+      margin-top: 4px;
+      color: var(--green);
+    }
+
+    .remove-file {
+      border: 0;
+      color: #ffc0c0;
+      background: transparent;
+      cursor: pointer;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .workspace-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 26px;
+    }
+
+    .primary:disabled {
+      cursor: not-allowed;
+      opacity: .4;
+      box-shadow: none;
+    }
+
+    .preview-card {
+      display: none;
+      margin-top: 25px;
+      padding: 18px;
+      border: 1px solid rgba(255, 255, 255, .1);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, .045);
+    }
+
+    .preview-card.is-visible {
+      display: block;
+    }
+
+    .preview-card img {
+      display: block;
+      width: 100%;
+      max-height: 430px;
+      border-radius: 12px;
+      object-fit: contain;
+      background: #07131f;
+    }
+
+    .preview-caption {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .workspace-status {
+      min-height: 21px;
+      margin-top: 17px;
+      color: var(--green);
+      font-size: 13px;
+    }
+
+
     .footer-row {
       display: flex;
       justify-content: space-between;
@@ -593,6 +807,15 @@
       .footer-row {
         flex-direction: column;
       }
+
+      .workspace-top {
+        flex-direction: column;
+      }
+
+      .workspace-back {
+        order: -1;
+      }
+
     }
   </style>
 </head>
@@ -621,7 +844,7 @@
     </div>
   </header>
 
-  <main>
+  <main class="landing">
 
     <!-- HERO -->
 
@@ -948,6 +1171,58 @@
 
   </main>
 
+  <main id="workspace" class="workspace" aria-labelledby="workspaceTitle">
+
+    <div class="container">
+
+      <div class="workspace-top">
+        <div>
+          <div class="eyebrow"><span class="status-dot"></span> Verification workspace</div>
+          <h1 id="workspaceTitle">Review medicine information<br><span>with care.</span></h1>
+          <p>This prototype starts with one image, then gives you a clear review path. No diagnosis, prescribing, or
+            automated clinical decision-making is performed here.</p>
+        </div>
+
+        <button class="workspace-back" type="button" onclick="showLanding()">← Back to ExactRx</button>
+      </div>
+
+      <section class="workspace-card">
+
+        <div id="uploadStage" class="workspace-stage">
+          <h2>Start with a prescription or medicine photo</h2>
+          <p class="step-label">Upload an image to begin a review</p>
+
+          <label class="upload-zone" for="medicineFile">
+            <span class="upload-icon">＋</span>
+            <strong>Choose an image</strong>
+            <small>PNG, JPG, or WEBP · Prototype only</small>
+            <input id="medicineFile" class="file-input" type="file" accept="image/png,image/jpeg,image/webp">
+          </label>
+
+          <div id="fileRow" class="file-row" aria-live="polite">
+            <div class="file-meta">
+              <strong id="fileName">No file selected</strong>
+              <small>Ready for review</small>
+            </div>
+            <button class="remove-file" type="button" onclick="removeFile()">Remove file</button>
+          </div>
+
+          <div id="previewCard" class="preview-card" aria-live="polite">
+            <img id="imagePreview" alt="Selected prescription preview">
+            <p class="preview-caption">Preview only. ExactRx has not read or interpreted this image.</p>
+          </div>
+
+          <div class="workspace-actions">
+            <button id="continueButton" class="primary" type="button" onclick="continueVerification()" disabled>Continue
+              →</button>
+          </div>
+          <p id="workspaceStatus" class="workspace-status" role="status"></p>
+        </div>
+
+      </section>
+    </div>
+  </main>
+
 
   <footer id="about">
 
@@ -968,13 +1243,60 @@
 
 
   <script>
+    const landing = document.querySelector(".landing");
+    const workspace = document.getElementById("workspace");
+    const fileInput = document.getElementById("medicineFile");
+    const fileRow = document.getElementById("fileRow");
+    const fileName = document.getElementById("fileName");
+    const continueButton = document.getElementById("continueButton");
+    const previewCard = document.getElementById("previewCard");
+    const imagePreview = document.getElementById("imagePreview");
+    const workspaceStatus = document.getElementById("workspaceStatus");
+    let previewUrl = "";
+
     function startDemo() {
-      const message = document.getElementById("demoMessage");
+      landing.classList.add("is-hidden");
+      workspace.classList.add("is-active");
+      document.body.classList.add("workspace-active");
+      window.scrollTo(0, 0);
+    }
 
-      message.textContent =
-        "Verification workspace will be connected in the next development step.";
+    function showLanding() {
+      landing.classList.remove("is-hidden");
+      workspace.classList.remove("is-active");
+      document.body.classList.remove("workspace-active");
+      window.scrollTo(0, 0);
+    }
 
-      message.style.color = "#55e6ff";
+    fileInput.addEventListener("change", function () {
+      const file = fileInput.files[0];
+
+      if (!file) return;
+
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+      previewUrl = URL.createObjectURL(file);
+      imagePreview.src = previewUrl;
+      previewCard.classList.add("is-visible");
+      fileName.textContent = file.name;
+      fileRow.classList.add("is-visible");
+      continueButton.disabled = false;
+      workspaceStatus.textContent = "";
+    });
+
+    function removeFile() {
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+      previewUrl = "";
+      fileInput.value = "";
+      imagePreview.removeAttribute("src");
+      previewCard.classList.remove("is-visible");
+      fileRow.classList.remove("is-visible");
+      fileName.textContent = "No file selected";
+      continueButton.disabled = true;
+      workspaceStatus.textContent = "";
+    }
+
+    function continueVerification() {
+      workspaceStatus.textContent = "Image ready. No analysis has been performed.";
     }
   </script>
 
