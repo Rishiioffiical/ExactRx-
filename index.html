@@ -1157,7 +1157,7 @@
             qualified professional.
           </p>
 
-          <button class="primary" onclick="startDemo()">
+          <button id="startVerificationButton" class="primary" type="button">
             Start Verification →
           </button>
 
@@ -1245,6 +1245,7 @@
   <script>
     const landing = document.querySelector(".landing");
     const workspace = document.getElementById("workspace");
+    const startVerificationButton = document.getElementById("startVerificationButton");
     const fileInput = document.getElementById("medicineFile");
     const fileRow = document.getElementById("fileRow");
     const fileName = document.getElementById("fileName");
@@ -1253,6 +1254,8 @@
     const imagePreview = document.getElementById("imagePreview");
     const workspaceStatus = document.getElementById("workspaceStatus");
     let previewUrl = "";
+
+    startVerificationButton.addEventListener("click", startDemo);
 
     function startDemo() {
       landing.classList.add("is-hidden");
