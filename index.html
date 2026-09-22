@@ -560,6 +560,14 @@
       display: none;
     }
 
+    .review-stage {
+      display: none;
+    }
+
+    .review-stage.is-visible {
+      display: block;
+    }
+
     body.workspace-active>footer {
       display: none;
     }
@@ -753,6 +761,115 @@
       font-size: 13px;
     }
 
+    .review-intro {
+      margin-top: 9px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .review-grid {
+      display: grid;
+      grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+      gap: 20px;
+      margin-top: 26px;
+    }
+
+    .review-image,
+    .review-panel {
+      padding: 18px;
+      border: 1px solid rgba(255, 255, 255, .1);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, .045);
+    }
+
+    .review-image img {
+      display: block;
+      width: 100%;
+      max-height: 360px;
+      border-radius: 12px;
+      object-fit: contain;
+      background: #07131f;
+    }
+
+    .review-image figcaption {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .review-panel h3 {
+      font-family: "Space Grotesk";
+      font-size: 20px;
+    }
+
+    .review-label {
+      display: inline-block;
+      margin-top: 8px;
+      color: var(--yellow);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .review-details {
+      display: grid;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .review-detail {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, .08);
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .review-detail strong {
+      color: #e8f8fc;
+      font-weight: 500;
+      text-align: right;
+    }
+
+    .review-notice {
+      margin-top: 20px;
+      padding: 14px;
+      border: 1px solid rgba(255, 214, 107, .25);
+      border-radius: 14px;
+      color: #ffe4a0;
+      background: rgba(255, 214, 107, .08);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .review-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .review-secondary {
+      border: 1px solid rgba(255, 142, 142, .35);
+      border-radius: 14px;
+      padding: 15px 21px;
+      color: #ffd0d0;
+      background: rgba(255, 142, 142, .08);
+      cursor: pointer;
+    }
+
+    .review-change {
+      margin-top: 20px;
+      border: 0;
+      color: var(--cyan-soft);
+      background: transparent;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
 
     .footer-row {
       display: flex;
@@ -814,6 +931,20 @@
 
       .workspace-back {
         order: -1;
+      }
+
+      .review-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .review-detail {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 5px;
+      }
+
+      .review-detail strong {
+        text-align: left;
       }
 
     }
@@ -1213,10 +1344,58 @@
           </div>
 
           <div class="workspace-actions">
-            <button id="continueButton" class="primary" type="button" onclick="continueVerification()" disabled>Continue
+            <button id="continueButton" class="primary" type="button" disabled>Continue
               →</button>
           </div>
-          <p id="workspaceStatus" class="workspace-status" role="status"></p>
+          <p id="workspaceStatus" class="workspace-status" role="status" tabindex="-1"></p>
+        </div>
+
+        <div id="reviewStage" class="review-stage" aria-live="polite">
+          <h2>Image review</h2>
+          <p class="review-intro">Possible medicine entries are shown as placeholders until a qualified person verifies
+            the information.</p>
+
+          <div class="review-grid">
+            <figure class="review-image">
+              <img id="reviewImagePreview" alt="Selected prescription preview for review">
+              <figcaption>Uploaded image preview · Awaiting verification</figcaption>
+            </figure>
+
+            <div class="review-panel">
+              <h3>Possible medicine entries</h3>
+              <span class="review-label">Awaiting verification</span>
+
+              <div class="review-details">
+                <div class="review-detail">
+                  <span>Medicine name</span>
+                  <strong>Not yet identified</strong>
+                </div>
+                <div class="review-detail">
+                  <span>Strength</span>
+                  <strong>Not yet identified</strong>
+                </div>
+                <div class="review-detail">
+                  <span>Dosage form</span>
+                  <strong>Not yet identified</strong>
+                </div>
+                <div class="review-detail">
+                  <span>Confidence</span>
+                  <strong>Not available</strong>
+                </div>
+              </div>
+
+              <div class="review-notice">ExactRx has not independently confirmed the medicine identity.</div>
+
+              <div class="review-actions">
+                <button id="confirmInformationButton" class="primary" type="button">Confirm information</button>
+                <button id="pharmacistVerificationButton" class="review-secondary" type="button">Needs pharmacist
+                  verification</button>
+              </div>
+              <p id="reviewStatus" class="workspace-status" role="status" tabindex="-1"></p>
+            </div>
+          </div>
+
+          <button id="changeImageButton" class="review-change" type="button">← Change image</button>
         </div>
 
       </section>
@@ -1253,9 +1432,24 @@
     const previewCard = document.getElementById("previewCard");
     const imagePreview = document.getElementById("imagePreview");
     const workspaceStatus = document.getElementById("workspaceStatus");
+    const uploadStage = document.getElementById("uploadStage");
+    const reviewStage = document.getElementById("reviewStage");
+    const reviewImagePreview = document.getElementById("reviewImagePreview");
+    const confirmInformationButton = document.getElementById("confirmInformationButton");
+    const pharmacistVerificationButton = document.getElementById("pharmacistVerificationButton");
+    const changeImageButton = document.getElementById("changeImageButton");
+    const reviewStatus = document.getElementById("reviewStatus");
     let previewUrl = "";
 
     startVerificationButton.addEventListener("click", startDemo);
+    continueButton.addEventListener("click", continueVerification);
+    confirmInformationButton.addEventListener("click", function () {
+      setReviewStatus("Information remains unconfirmed. Professional verification is still required.");
+    });
+    pharmacistVerificationButton.addEventListener("click", function () {
+      setReviewStatus("Pharmacist verification requested. No medicine identity has been confirmed.");
+    });
+    changeImageButton.addEventListener("click", showUploadStage);
 
     function startDemo() {
       landing.classList.add("is-hidden");
@@ -1279,11 +1473,12 @@
       if (previewUrl) URL.revokeObjectURL(previewUrl);
       previewUrl = URL.createObjectURL(file);
       imagePreview.src = previewUrl;
+      reviewImagePreview.src = previewUrl;
       previewCard.classList.add("is-visible");
       fileName.textContent = file.name;
       fileRow.classList.add("is-visible");
       continueButton.disabled = false;
-      workspaceStatus.textContent = "";
+      workspaceStatus.textContent = "Image ready. Verification has not been performed yet.";
     });
 
     function removeFile() {
@@ -1291,15 +1486,33 @@
       previewUrl = "";
       fileInput.value = "";
       imagePreview.removeAttribute("src");
+      reviewImagePreview.removeAttribute("src");
       previewCard.classList.remove("is-visible");
       fileRow.classList.remove("is-visible");
       fileName.textContent = "No file selected";
       continueButton.disabled = true;
       workspaceStatus.textContent = "";
+      reviewStatus.textContent = "";
+      showUploadStage();
     }
 
     function continueVerification() {
-      workspaceStatus.textContent = "Image ready. No analysis has been performed.";
+      if (!fileInput.files[0]) return;
+
+      uploadStage.classList.add("is-hidden");
+      reviewStage.classList.add("is-visible");
+      setReviewStatus("Awaiting verification. No medicine identity has been confirmed.");
+    }
+
+    function showUploadStage() {
+      uploadStage.classList.remove("is-hidden");
+      reviewStage.classList.remove("is-visible");
+      workspaceStatus.focus();
+    }
+
+    function setReviewStatus(message) {
+      reviewStatus.textContent = message;
+      reviewStatus.focus();
     }
   </script>
 
