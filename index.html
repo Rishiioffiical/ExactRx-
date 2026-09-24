@@ -1011,6 +1011,115 @@
       font-size: 13px;
     }
 
+    .safety-review-stage {
+      display: none;
+    }
+
+    .safety-review-stage.is-visible {
+      display: block;
+    }
+
+    .safety-review-intro {
+      margin-top: 12px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .safety-medicine {
+      margin-top: 22px;
+      padding: 16px;
+      border: 1px solid rgba(85, 230, 255, .2);
+      border-radius: 14px;
+      background: rgba(85, 230, 255, .06);
+    }
+
+    .safety-medicine strong {
+      display: block;
+      color: #e8f8fc;
+      font-family: "Space Grotesk";
+      font-size: 18px;
+    }
+
+    .safety-medicine span {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .safety-result {
+      margin-top: 22px;
+      padding: 18px;
+      border: 1px solid rgba(255, 214, 107, .28);
+      border-radius: 16px;
+      background: rgba(255, 214, 107, .08);
+    }
+
+    .safety-result strong {
+      display: block;
+      color: #ffe4a0;
+      font-family: "Space Grotesk";
+      font-size: 20px;
+    }
+
+    .safety-result p {
+      margin-top: 8px;
+      color: #d8c99f;
+      line-height: 1.6;
+    }
+
+    .safety-states {
+      display: grid;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .safety-state {
+      padding: 13px 15px;
+      border: 1px solid rgba(255, 255, 255, .1);
+      border-radius: 12px;
+      color: var(--muted);
+      background: rgba(255, 255, 255, .035);
+      font-size: 13px;
+    }
+
+    .safety-state.current {
+      border-color: rgba(255, 214, 107, .3);
+      color: #ffe4a0;
+    }
+
+    .safety-explanation {
+      margin-top: 22px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .safety-escalation {
+      margin-top: 18px;
+      padding: 14px;
+      border: 1px solid rgba(255, 142, 142, .25);
+      border-radius: 14px;
+      color: #ffd0d0;
+      background: rgba(255, 142, 142, .07);
+      line-height: 1.5;
+    }
+
+    .safety-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    .safety-back {
+      margin-top: 20px;
+      border: 0;
+      color: var(--cyan-soft);
+      background: transparent;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
     .review-change {
       margin-top: 20px;
       border: 0;
@@ -1506,8 +1615,8 @@
 
         <div id="reviewStage" class="review-stage" aria-live="polite">
           <h2>Image review</h2>
-          <p class="review-intro">Possible medicine entries are AI-assisted demo samples only. They were not identified
-            from the uploaded image and are not confirmed medicines.</p>
+          <p class="review-intro">Possible medicine entries were returned by Gemini from the uploaded image. They are
+            not confirmed medicines until you confirm the information.</p>
 
           <div class="review-grid">
             <figure class="review-image">
@@ -1517,31 +1626,10 @@
 
             <div class="review-panel">
               <h3>Possible medicine entries</h3>
-              <span class="review-label">DEMO/SIMULATED · AI-assisted possible identifications · Awaiting
+              <span id="reviewSourceLabel" class="review-label">GEMINI VISION · Possible identifications · Awaiting
                 verification</span>
 
-              <div id="candidateList" class="candidate-list">
-                <article class="candidate">
-                  <div class="candidate-title">
-                    <span>Demo sample: Amoxicillin</span>
-                    <span class="candidate-confidence">72% · Low confidence</span>
-                  </div>
-                  <div class="candidate-details">
-                    <span>Strength: 500 mg</span>
-                    <span>Dosage form: Capsule</span>
-                  </div>
-                </article>
-                <article class="candidate">
-                  <div class="candidate-title">
-                    <span>Demo sample: Cephalexin</span>
-                    <span class="candidate-confidence">41% · Low confidence</span>
-                  </div>
-                  <div class="candidate-details">
-                    <span>Strength: 500 mg</span>
-                    <span>Dosage form: Capsule</span>
-                  </div>
-                </article>
-              </div>
+              <div id="candidateList" class="candidate-list"></div>
             </div>
           </div>
 
@@ -1567,7 +1655,7 @@
         </div>
 
         <div id="medicationReviewStage" class="medication-review-stage" aria-live="polite">
-          <div class="review-label">DEMO/SIMULATED · Educational information only</div>
+          <div class="review-label">EDUCATIONAL INFORMATION ONLY</div>
           <h2>Medication Information Review</h2>
           <p class="medication-review-intro">This is general educational information for the simulated medicine
             below. It is not individualized medical advice and does not confirm what was written on the uploaded
@@ -1576,38 +1664,38 @@
           <div class="medication-info-grid">
             <div class="medication-info-item">
               <strong>Medicine name</strong>
-              <span>Amoxicillin</span>
+              <span id="medicationName">Not confirmed</span>
             </div>
             <div class="medication-info-item">
               <strong>Generic name</strong>
-              <span>Amoxicillin</span>
+              <span id="medicationGenericName">Not confirmed</span>
             </div>
             <div class="medication-info-item">
               <strong>Strength</strong>
-              <span>500 mg</span>
+              <span id="medicationStrength">Not readable</span>
             </div>
             <div class="medication-info-item">
               <strong>Dosage form</strong>
-              <span>Capsule</span>
+              <span id="medicationDosageForm">Not readable</span>
             </div>
             <div class="medication-info-item">
               <strong>Drug class</strong>
-              <span>Penicillin-type antibiotic</span>
+              <span>Not provided by image analysis</span>
             </div>
             <div class="medication-info-item medication-info-wide">
               <strong>Common uses</strong>
-              <span>General educational example: treatment of certain bacterial infections when prescribed by a
-                qualified clinician.</span>
+              <span>General medicine information should be reviewed with a pharmacist or doctor for the confirmed
+                product.</span>
             </div>
             <div class="medication-info-item medication-info-wide">
               <strong>Common precautions</strong>
-              <span>People with known penicillin or other beta-lactam allergies should discuss this medicine with a
+              <span>Discuss allergies, other medicines, pregnancy or breastfeeding, and the specific product with a
                 pharmacist or doctor.</span>
             </div>
             <div class="medication-info-item medication-info-wide">
               <strong>Common side effects</strong>
-              <span>General examples may include nausea, diarrhea, or rash. A pharmacist or doctor can explain what may
-                require attention.</span>
+              <span>Possible effects depend on the confirmed medicine. Ask a pharmacist or doctor what requires
+                attention.</span>
             </div>
             <div class="medication-info-item medication-info-wide">
               <strong>Administration / food considerations</strong>
@@ -1621,11 +1709,52 @@
             </div>
           </div>
 
-          <div class="medication-review-notice"><strong>DEMO/SIMULATED:</strong> This information is not a
-            patient-specific safety conclusion. ExactRx does not diagnose, prescribe, change dosage, or recommend
-            starting or stopping a medicine.</div>
+          <div class="medication-review-notice"><strong>EDUCATIONAL INFORMATION ONLY:</strong> This information is
+            not a patient-specific safety conclusion. ExactRx does not diagnose, prescribe, change dosage, or
+            recommend starting or stopping a medicine.</div>
+          <div class="safety-actions">
+            <button id="checkMedicationSafetyButton" class="primary" type="button">Check medication safety</button>
+          </div>
           <button id="backToVerificationButton" class="medication-review-back" type="button">← Back to
             verification</button>
+        </div>
+
+        <div id="safetyReviewStage" class="safety-review-stage" aria-live="polite">
+          <div class="review-label">EDUCATIONAL REVIEW · Safety boundaries apply</div>
+          <h2>Medication Safety Check</h2>
+          <p class="safety-review-intro">This review uses only the user-confirmed medicine fields and general
+            information. It is not personalized medical advice and does not determine whether a prescription is
+            correct or incorrect.</p>
+
+          <div class="safety-medicine">
+            <strong id="safetyMedicineName">Not confirmed</strong>
+            <span id="safetyMedicineDetails">Not readable · Verified by user confirmation only</span>
+          </div>
+
+          <div class="safety-result">
+            <strong>Insufficient information to assess</strong>
+            <p>The available information is not enough to make a patient-specific medication safety conclusion.</p>
+          </div>
+
+          <div class="safety-states">
+            <div class="safety-state current">Current state: Insufficient information to assess</div>
+            <div class="safety-state">Possible state: Potential concern identified</div>
+            <div class="safety-state">Possible state: No known concern identified from the available
+              information</div>
+          </div>
+
+          <p class="safety-explanation"><strong>Information checked:</strong> confirmed medicine name, strength, dosage
+            form, and general educational information. No patient history, complete medication list, diagnosis,
+            laboratory results, or prescribing instructions were assessed.</p>
+          <div class="safety-escalation"><strong>Discuss with a pharmacist or doctor:</strong> Ask a qualified
+            professional to review this medicine, your individual circumstances, and any questions or concerns.</div>
+
+          <div class="safety-actions">
+            <button id="backToMedicationInformationButton" class="review-secondary" type="button">Back to medication
+              information</button>
+            <button id="safetyBackToVerificationButton" class="review-secondary" type="button">Back to
+              verification</button>
+          </div>
         </div>
     </div>
 
@@ -1670,6 +1799,7 @@
     const reviewStage = document.getElementById("reviewStage");
     const reviewImagePreview = document.getElementById("reviewImagePreview");
     const candidateList = document.getElementById("candidateList");
+    const reviewSourceLabel = document.getElementById("reviewSourceLabel");
     const confirmInformationButton = document.getElementById("confirmInformationButton");
     const notCorrectButton = document.getElementById("notCorrectButton");
     const pharmacistVerificationButton = document.getElementById("pharmacistVerificationButton");
@@ -1679,9 +1809,21 @@
     const medicationInformationButton = document.getElementById("medicationInformationButton");
     const medicationReviewStage = document.getElementById("medicationReviewStage");
     const backToVerificationButton = document.getElementById("backToVerificationButton");
+    const checkMedicationSafetyButton = document.getElementById("checkMedicationSafetyButton");
+    const safetyReviewStage = document.getElementById("safetyReviewStage");
+    const backToMedicationInformationButton = document.getElementById("backToMedicationInformationButton");
+    const safetyBackToVerificationButton = document.getElementById("safetyBackToVerificationButton");
+    const medicationName = document.getElementById("medicationName");
+    const medicationGenericName = document.getElementById("medicationGenericName");
+    const medicationStrength = document.getElementById("medicationStrength");
+    const medicationDosageForm = document.getElementById("medicationDosageForm");
+    const safetyMedicineName = document.getElementById("safetyMedicineName");
+    const safetyMedicineDetails = document.getElementById("safetyMedicineDetails");
     const reviewStatus = document.getElementById("reviewStatus");
     let highConfidenceDemoLoaded = false;
     let highConfidenceDemoConfirmed = false;
+    let confirmedCandidate = null;
+    let currentCandidates = [];
     let previewUrl = "";
 
     startVerificationButton.addEventListener("click", startDemo);
@@ -1697,6 +1839,9 @@
     highConfidenceDemoButton.addEventListener("click", loadHighConfidenceDemo);
     medicationInformationButton.addEventListener("click", showMedicationInformationReview);
     backToVerificationButton.addEventListener("click", showVerificationReview);
+    checkMedicationSafetyButton.addEventListener("click", showSafetyReview);
+    backToMedicationInformationButton.addEventListener("click", showMedicationInformationReview);
+    safetyBackToVerificationButton.addEventListener("click", showVerificationReview);
 
     function startDemo() {
       landing.classList.add("is-hidden");
@@ -1742,44 +1887,122 @@
       reviewStatus.textContent = "";
       highConfidenceDemoLoaded = false;
       highConfidenceDemoConfirmed = false;
+      confirmedCandidate = null;
       nextService.classList.remove("is-visible");
       confirmInformationButton.disabled = true;
       medicationReviewStage.classList.remove("is-visible");
+      safetyReviewStage.classList.remove("is-visible");
       showUploadStage();
     }
 
-    function continueVerification() {
+    async function continueVerification() {
       if (!fileInput.files[0]) return;
 
-      uploadStage.classList.add("is-hidden");
-      reviewStage.classList.add("is-visible");
-      setReviewStatus("Confirmation unavailable: low confidence requires pharmacist verification.");
+      const file = fileInput.files[0];
+      continueButton.disabled = true;
+      setWorkspaceStatus("Sending image for Gemini Vision analysis...");
+
+      try {
+        const imageBase64 = await readFileAsBase64(file);
+        const response = await fetch("/api/verify-image", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ mimeType: file.type, imageBase64 })
+        });
+        const result = await response.json();
+        if (!response.ok) {
+          const errorMessage = typeof result.error === "string"
+            ? result.error
+            : result.error?.message;
+          throw new Error(errorMessage || "Verification is temporarily unavailable.");
+        }
+
+        renderCandidates(result.candidates || [], false);
+        uploadStage.classList.add("is-hidden");
+        reviewStage.classList.add("is-visible");
+        setReviewStatus("Gemini returned possible candidates. Pharmacist or user confirmation is still required.");
+      } catch (error) {
+        setWorkspaceStatus(error.message || "Verification is temporarily unavailable.");
+      } finally {
+        continueButton.disabled = false;
+      }
+    }
+
+    function readFileAsBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result).split(",")[1]);
+        reader.onerror = () => reject(new Error("The selected image could not be read."));
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function renderCandidates(candidates, isDemo) {
+      highConfidenceDemoLoaded = isDemo;
+      highConfidenceDemoConfirmed = false;
+      confirmedCandidate = null;
+      currentCandidates = candidates;
+      reviewSourceLabel.textContent = isDemo
+        ? "DEMO/TEST MODE · Simulated candidate · Awaiting verification"
+        : "GEMINI VISION · Possible identifications · Awaiting verification";
+      candidateList.innerHTML = candidates.map((candidate) => {
+        const confidence = `${Math.round(({ low: 35, medium: 65, high: 90 }[candidate.confidence] || 0))}% · ${candidate.confidence} confidence`;
+        return `<article class="candidate">
+          <div class="candidate-title">
+            <span>${escapeHtml(candidate.name)}</span>
+            <span class="candidate-confidence">${confidence}</span>
+          </div>
+          <div class="candidate-details">
+            <span>Strength: ${escapeHtml(candidate.strength)}</span>
+            <span>Dosage form: ${escapeHtml(candidate.dosageForm)}</span>
+          </div>
+          <div class="candidate-details">Uncertainty: ${escapeHtml(candidate.uncertaintyReason || "The image is unclear.")}</div>
+        </article>`;
+      }).join("");
+      confirmInformationButton.disabled = candidates.length === 0 || candidates[0].name === "uncertain/unreadable";
+      nextService.classList.remove("is-visible");
+    }
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>'"]/g, (character) => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;"
+      }[character]));
+    }
+
+    function setWorkspaceStatus(message) {
+      workspaceStatus.textContent = message;
     }
 
     function loadHighConfidenceDemo() {
-      highConfidenceDemoLoaded = true;
-      highConfidenceDemoConfirmed = false;
-      candidateList.innerHTML = `<article class="candidate">
-        <div class="candidate-title">
-          <span>DEMO/SIMULATED: Amoxicillin</span>
-          <span class="candidate-confidence" style="color:var(--green);">96% · High confidence</span>
-        </div>
-        <div class="candidate-details">
-          <span>Strength: 500 mg</span>
-          <span>Dosage form: Capsule</span>
-        </div>
-      </article>`;
-      confirmInformationButton.disabled = false;
-      nextService.classList.remove("is-visible");
-      setReviewStatus("DEMO/SIMULATED high-confidence candidate loaded. Medicine identity remains unconfirmed and this data was not extracted from the uploaded prescription.");
+      renderCandidates([{
+        name: "Amoxicillin",
+        strength: "500 mg",
+        dosageForm: "Capsule",
+        confidence: "high",
+        uncertaintyReason: "Synthetic demo candidate; not extracted from the uploaded image."
+      }], true);
+      setReviewStatus("DEMO/TEST candidate loaded. It was not extracted from the uploaded image and remains unconfirmed.");
     }
 
     function confirmInformation() {
-      if (!highConfidenceDemoLoaded || highConfidenceDemoConfirmed) return;
+      const firstCandidate = candidateList.querySelector(".candidate");
+      if (!firstCandidate || highConfidenceDemoConfirmed) return;
 
+      confirmedCandidate = currentCandidates[0];
+      if (!confirmedCandidate || confirmedCandidate.name === "uncertain/unreadable") return;
       highConfidenceDemoConfirmed = true;
+      updateConfirmedMedicine(confirmedCandidate);
       nextService.classList.add("is-visible");
-      setReviewStatus("Medicine identity confirmed for this prototype as User confirmed. No clinical safety conclusion has been made.");
+      setReviewStatus("Medicine identity confirmed by user. No clinical safety conclusion has been made.");
+    }
+
+    function updateConfirmedMedicine(candidate) {
+      medicationName.textContent = candidate.name;
+      medicationGenericName.textContent = candidate.name;
+      medicationStrength.textContent = candidate.strength;
+      medicationDosageForm.textContent = candidate.dosageForm;
+      safetyMedicineName.textContent = candidate.name;
+      safetyMedicineDetails.textContent = `${candidate.strength} ${candidate.dosageForm} · Verified by user confirmation only`;
     }
 
     function showMedicationInformationReview() {
@@ -1787,18 +2010,28 @@
 
       reviewStage.classList.remove("is-visible");
       medicationReviewStage.classList.add("is-visible");
+      safetyReviewStage.classList.remove("is-visible");
     }
 
     function showVerificationReview() {
       medicationReviewStage.classList.remove("is-visible");
       reviewStage.classList.add("is-visible");
-      setReviewStatus("Medicine identity confirmed for this prototype as User confirmed. No clinical safety conclusion has been made.");
+      safetyReviewStage.classList.remove("is-visible");
+      setReviewStatus("Medicine identity confirmed by user. No clinical safety conclusion has been made.");
+    }
+
+    function showSafetyReview() {
+      if (!highConfidenceDemoConfirmed) return;
+
+      medicationReviewStage.classList.remove("is-visible");
+      safetyReviewStage.classList.add("is-visible");
     }
 
     function showUploadStage() {
       uploadStage.classList.remove("is-hidden");
       reviewStage.classList.remove("is-visible");
       medicationReviewStage.classList.remove("is-visible");
+      safetyReviewStage.classList.remove("is-visible");
       workspaceStatus.focus();
     }
 
