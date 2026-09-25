@@ -162,8 +162,6 @@ async function requestGeminiCandidates(body) {
     }
 
     return extractGeminiCandidates(await apiResponse.json());
-}
-
 const server = http.createServer(async (request, response) => {
     const requestUrl = new URL(request.url, `http://${request.headers.host || "localhost"}`);
 
